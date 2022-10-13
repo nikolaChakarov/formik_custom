@@ -46,8 +46,6 @@ const Form = () => {
         handleSubmit,
     } = useForm({ init, validate, onSubmit });
 
-    console.log({ errors });
-
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <label htmlFor="name">
