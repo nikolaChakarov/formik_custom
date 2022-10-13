@@ -14,12 +14,6 @@ const useForm = (props) => {
             ...prev,
             [e.target.name]: e.target.checked,
         }));
-
-        setErrors((prev) => {
-            delete prev[e.target.name];
-
-            return { ...prev };
-        });
     };
 
     const handleChange = (e) => {
@@ -27,12 +21,6 @@ const useForm = (props) => {
             ...prev,
             [e.target.name]: e.target.value,
         }));
-
-        setErrors((prev) => {
-            delete prev[e.target.name];
-
-            return { ...prev };
-        });
     };
 
     const handleBlur = (e) => {
@@ -40,8 +28,6 @@ const useForm = (props) => {
             ...prev,
             [e.target.name]: true,
         }));
-
-        setErrors(validate(values));
     };
 
     const handleSubmit = (e) => {
@@ -57,8 +43,6 @@ const useForm = (props) => {
             return;
         }
 
-        setErrors({});
-
         setIsSubmitting(true);
 
         onSubmit(values);
@@ -66,10 +50,19 @@ const useForm = (props) => {
 
     useEffect(() => {
         const testValidation = validate(values);
-        if (Object.keys(testValidation).length === 0) {
+        setErrors(testValidation);
+
+        const isTouched = Object.keys(touched).length > 0;
+        const isError = Object.keys(testValidation).length > 0;
+
+        if (!isError) {
             setIsValid(true);
         }
-    }, [values]);
+
+        if (isTouched && isError) {
+            setIsValid(false);
+        }
+    }, [values, touched]);
 
     return {
         values,
